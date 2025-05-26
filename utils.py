@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 # Optional tool: Web search via DuckDuckGo Instant Answer API (simplified example)
 def web_search(query: str) -> str:
     response = requests.get(f"https://api.duckduckgo.com/?q={query}&format=json")
