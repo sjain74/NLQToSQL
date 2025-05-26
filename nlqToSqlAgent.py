@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 import utils
 
-LIST_MODELS = False
+LIST_MODELS = True
 
 SCHEMA = "Table: customers (id, name, email, city, created_at)\n" + \
          "Table: products (id, name, price, in_stock, created_at)\n" + \
@@ -19,6 +19,8 @@ def nlq_to_sql_using_openAI(query: str) -> str:
     """
     AI agent that converts a text string query to SQL query using OpenAI.
     """
+    # Decide whether to use a tool based on keywords
+    use_search = any(keyword in query.lower() for keyword in ["latest", "trends", "examples", "benchmarks"])
 
     # Configure the API key
     try:
@@ -41,7 +43,7 @@ def nlq_to_sql_using_openAI(query: str) -> str:
         SQL:
         """
 
-    using_model = "gpt-4o"
+    using_model = "gpt-4o-mini"
     print(f"Using model: {using_model}")
     response = openai.chat.completions.create(
         model=using_model,
@@ -58,6 +60,12 @@ def nlq_to_sql_using_openAI(query: str) -> str:
     return reply
 
 def nlq_to_sql_using_google(query: str) -> str:
+    """
+    AI agent that converts a text string query to SQL query using Google.
+    """
+
+    # Decide whether to use a tool based on keywords
+    use_search = any(keyword in query.lower() for keyword in ["latest", "trends", "examples", "benchmarks"])
 
     # Configure the API key
     try:
@@ -79,7 +87,7 @@ def nlq_to_sql_using_google(query: str) -> str:
         SQL:
         """
 
-    using_model = 'gemini-1.5-pro-latest'
+    using_model = 'gemini-2.0-flash'
     print(f"Using model: {using_model}")
     model = genai.GenerativeModel(using_model)
     chat = model.start_chat()

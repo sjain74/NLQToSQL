@@ -1,4 +1,5 @@
 from typing import List, Dict
+import datetime
 
 # Optional tool: Web search via DuckDuckGo Instant Answer API (simplified example)
 def web_search(query: str) -> str:
