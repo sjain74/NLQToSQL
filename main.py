@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     agent = AgentTypes.NLQ_TO_SQL_GOOGLE
 
-    print("Welcome! Enter a natural language query (or 'exit' to quit):")
+    print("Welcome! Enter a query (or 'exit' to quit):")
     while True:
         query = input("You: ")
         if query.lower() in {"exit", "quit"}:
