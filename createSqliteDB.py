@@ -1,7 +1,8 @@
 import sqlite3
+import globals
 
 # Connect to SQLite database (creates a new one if it doesn't exist)
-conn = sqlite3.connect("shop.db")
+conn = sqlite3.connect(globals.SQLITE3_DB)
 cursor = conn.cursor()
 
 # Create tables

@@ -1,12 +1,11 @@
-import origSampleAgent 
 import nlqToSqlAgent
 from enum import Enum
 import utils
+import executeQuery
 
 class AgentTypes(Enum):
-    ORIG_SAMPLE_AGENT = 1
-    NLQ_TO_SQL_OPENAI = 2
-    NLQ_TO_SQL_GOOGLE = 3
+    NLQ_TO_SQL_OPENAI = 1
+    NLQ_TO_SQL_GOOGLE = 2
 
 VIEW_LOGS = False
 
@@ -22,18 +21,15 @@ if __name__ == "__main__":
             print("Goodbye!")
             break
 
+        sql_query = None
         match agent:
-            case AgentTypes.ORIG_SAMPLE_AGENT:
-                result = origSampleAgent.smart_marketing_agent(query)
-                print("Agent Response:\n", result)
-                
             case AgentTypes.NLQ_TO_SQL_OPENAI:
-                result = nlqToSqlAgent.nlq_to_sql_using_openAI(query)
-                print("Agent Response:\n", result)
+                sql_query = nlqToSqlAgent.nlq_to_sql_using_openAI(query)
+                print("Agent Response:\n", sql_query)
                 
             case AgentTypes.NLQ_TO_SQL_GOOGLE:
-                result = nlqToSqlAgent.nlq_to_sql_using_google(query)
-                print("Agent Response:\n", result)
+                sql_query = nlqToSqlAgent.nlq_to_sql_using_google(query)
+                print(f"Agent Response:\n{sql_query}")
                 
             case _:
                 print("Unknown agent type")
@@ -42,3 +38,9 @@ if __name__ == "__main__":
             print("\n--- Agent Log ---")
             for log in utils.AGENT_LOG:
                 print(log)
+
+        if sql_query:
+            results = executeQuery.execute_query(sql_query)
+
+            for row in results:
+                print(row)

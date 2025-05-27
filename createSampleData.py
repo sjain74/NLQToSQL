@@ -1,10 +1,11 @@
 import sqlite3
 import random
 from faker import Faker
+import globals
 
 # Initialize Faker and database
 faker = Faker()
-conn = sqlite3.connect("shop.db")
+conn = sqlite3.connect(globals.SQLITE3_DB)
 cursor = conn.cursor()
 
 # Insert sample customers
