@@ -1,5 +1,7 @@
 from typing import List, Dict
 import datetime
+import sqlite3
+import globals
 
 # Optional tool: Web search via DuckDuckGo Instant Answer API (simplified example)
 def web_search(query: str) -> str:
@@ -19,3 +21,13 @@ def log_agent_action(task: str, response: str, tool_used: str = None):
         "response": response,
         "tool": tool_used
     })
+
+def load_schema():
+    conn = sqlite3.connect(globals.SQLITE3_DB)
+    cursor = conn.cursor()
+    cursor.execute("SELECT sql FROM sqlite_master WHERE type='table';")
+    for sql in cursor.fetchall():
+        globals.DB_SCHEMA += sql[0] + "\n"
+
+    print(f"Schema:\n{globals.DB_SCHEMA}")
+    conn.close()

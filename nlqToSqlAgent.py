@@ -7,13 +7,16 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 import utils
+import globals
 
 LIST_MODELS     = False
 
-SCHEMA          = "Table: customers (id, name, email, city, created_at)\n" + \
-                  "Table: products (id, name, price, in_stock, created_at)\n" + \
-                  "Table: orders (id, customer_id, product_id, quantity, order_date, " + \
-                    "FOREIGN KEY (customer_id) REFERENCES customers(id), FOREIGN KEY (product_id) REFERENCES products(id))"
+"""
+SCHEMA   = "Table: customers (id, name, email, city, created_at)\n" + \
+           "Table: products (id, name, price, in_stock, created_at)\n" + \
+           "Table: orders (id, customer_id, product_id, quantity, order_date, " + \
+                "FOREIGN KEY (customer_id) REFERENCES customers(id), FOREIGN KEY (product_id) REFERENCES products(id))"
+"""
 
 USE_SEARCH      = None
 OPENAI_MODEL    = "gpt-4.1-mini"
@@ -37,14 +40,14 @@ def create_prompt(query: str) -> str:
         return f"""
             You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
             Tool info: {tool_info}
-            Schema: {SCHEMA}
+            Schema: {globals.DB_SCHEMA}
             Question: {query}
             SQL:
             """
     else:
         return f"""
             You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
-            Schema: {SCHEMA}
+            Schema: {globals.DB_SCHEMA}
             Question: {query}
             SQL:
             """

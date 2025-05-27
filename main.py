@@ -12,6 +12,7 @@ VIEW_LOGS = False
 # Example use
 if __name__ == "__main__":
 
+    utils.load_schema()
     agent = AgentTypes.NLQ_TO_SQL_GOOGLE
 
     print("Welcome! Enter a query (or 'exit' to quit):")
