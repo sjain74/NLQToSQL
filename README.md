@@ -5,8 +5,8 @@ Natural language query to SQL LLM/agent project
 
 1. Clone the repository
 2. In nlqToSql directory:
-   1. run "python createSqliteDB.py" to create a sample Sqlite3 DB called shop.db
-   2. run "python createSampleData.py" to populate this DB with 1000 customers, 500 products, and 10000 orders
+	1. run "python createSqliteDB.py" to create a sample Sqlite3 DB called shop.db
+	2. run "python createSampleData.py" to populate this DB with 1000 customers, 500 products, and 10000 orders
 3. You can install "DB browser for Sqlite" to access shop.db
 4. run "python main.py" to interactively convert natural language queries to SQL 
 
