@@ -1,7 +1,7 @@
 # NLQToSQL
 Natural language query to SQL LLM/agent project
 
-## Steps to play around with this agent, on mac:
+## Steps to play around with this agent on mac:
 
 1. Clone the repository
 2. In nlqToSql directory:
