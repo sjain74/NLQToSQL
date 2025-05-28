@@ -11,12 +11,12 @@ Natural language query to SQL LLM/agent project
 4. Command line:
 ```
 $ python main.py --help
-	usage: main.py [-h] [--file FILE]
-	Natural language query to SQL tool.
+usage: main.py [-h] [--file FILE]
+Natural language query to SQL tool.
 
-	options:
-		-h, --help   show this help message and exit
-		--file FILE  Input file containing a list of queries
+options:
+	-h, --help   show this help message and exit
+	--file FILE  Input file containing a list of queries
 ``` 
 
 ## TBDs:
