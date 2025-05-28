@@ -8,7 +8,14 @@ Natural language query to SQL LLM/agent project
 	1. run "python createSqliteDB.py" to create a sample Sqlite3 DB called shop.db
 	2. run "python createSampleData.py" to populate this DB with 1000 customers, 500 products, and 10000 orders
 3. You can install "DB browser for Sqlite" to access shop.db
-4. run "python main.py" to interactively convert natural language queries to SQL 
+4. python main.py --help                                              
+usage: main.py [-h] [--file FILE]
+
+Natural language query to SQL tool.
+
+options:
+  -h, --help   show this help message and exit
+  --file FILE  Input file containing a list of queries 
 
 
 ## TBDs:
@@ -28,3 +35,5 @@ Natural language query to SQL LLM/agent project
 6. Think about some other schemes to improve accuracy e.g. by comparing outputs from different models etc.
 7. Add a frontend
 8. Dockerize the whole "product"
+9. Integrate with Birder.media
+10. Dig deeper into other similar works, e.g.: https://levelup.gitconnected.com/how-to-build-a-natural-language-data-querying-agent-with-a-production-ready-co-pilot-24009b86e696

@@ -3,6 +3,8 @@ from enum import Enum
 import utils
 import executeQuery
 import globals
+import argparse
+import time
 
 class AgentTypes(Enum):
     NLQ_TO_SQL_OPENAI       = 1
@@ -16,17 +18,34 @@ if __name__ == "__main__":
 
     agent = AgentTypes.NLQ_TO_SQL_GOOGLE
 
+    parser = argparse.ArgumentParser(description="Natural language query to SQL tool.")
+    parser.add_argument("--file", help="Input file containing a list of queries", default=None)
+    args = parser.parse_args()
+
+    input_file = open(args.file, "r") if args.file else None
     out_file = open("output.txt", "w")
 
     utils.load_schema()
     print(f"Schema: {globals.DB_SCHEMA}", file=out_file, flush=True)
-
-    print("Welcome! Enter a query (or 'exit' to quit):")
+    
     while True:
-        query = input("You: ")
-        if query.lower() in {"exit", "quit"}:
-            print("Goodbye!")
-            break
+        if input_file:
+            time.sleep(10)  # to handle APIs rate limits.
+            line = input_file.readline()
+            if line:
+                query = line.strip()    # skip \n at the end of the line.
+                if query[0] == '#':
+                    print(f"Skipping: {query}")
+                    continue
+            else:
+                print("Done processing input file!")
+                break
+        else:
+            print("Welcome! Enter a query (or 'exit' to quit):")
+            query = input("You: ")
+            if query.lower() in {"exit", "quit"}:
+                print("Goodbye!")
+                break
 
         print(f"\nNLQ: {query}", file=out_file, flush=True)
 
@@ -56,4 +75,6 @@ if __name__ == "__main__":
             for row in results:
                 print(row)
 
+    if input_file:
+        input_file.close()
     out_file.close()
