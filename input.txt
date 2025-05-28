@@ -1,0 +1,66 @@
+# Following queries were generated manually
+how many customers do we have
+how many products do we have
+how many orders do we have so far
+which customers have not ordered anything
+which customers have ordered more than 15 times
+which customers have never ordered
+list customers with all their orders with product info
+list customers with all their orders with product info, give output sorted on customer name
+which customers have ordered more than 15 products
+which customers have ordered more than 15 product items
+which customers have ordered less than 5 times
+which customers have ordered more than 5 times during last month
+which products have no orders
+which products have not been ordered
+# Following queries were generated using ChatGPT with DB schema as the input
+Show me all customers from New York.
+List all products that are currently in stock.
+What is the email address of the customer named John Doe?
+Which customers placed orders in the last 30 days?
+Give me a list of products ordered more than 5 times.
+How many orders did each customer place?
+Show the total revenue generated from each product.
+List all customers who have never placed an order.
+What is the most expensive product?
+Which product has the highest number of orders?
+Find the top 5 cities with the most customers.
+List customers who signed up in the last 7 days.
+What is the average price of all products?
+Show the details of all orders placed today.
+List all products ordered by customer with ID 3.
+What was the total quantity ordered for each product?
+Get a list of all customers and the total amount they spent.
+Which customers ordered a product priced above $100?
+Show all orders with quantity greater than 10.
+List products that have never been ordered.
+What are the names of customers who ordered the product “Laptop”?
+Which product is out of stock?
+Find all orders for customers in Los Angeles.
+How many products were ordered by customer “Alice”?
+Show the order history for customer ID 7.
+List all customers and how many different products they ordered.
+What is the average order quantity?
+Show customers who ordered more than 3 different products.
+What products were ordered in March 2025?
+How many orders were placed per day?
+List the top 3 best-selling products by quantity.
+Show customers who ordered at least once and live in Chicago.
+Find the customer who spent the most money.
+List all orders along with customer and product names.
+What is the total revenue from all orders?
+List all products with price less than $20.
+How many customers live in each city?
+Which customer placed the first order?
+What is the most recent order for each customer?
+Find the total number of customers who ordered “Smartphone”.
+List all products and how many times each has been ordered.
+Show the most popular product in each city.
+Get a list of all orders sorted by order date.
+Find customers who ordered more than once in a single day.
+Show orders where total value (price × quantity) exceeds $500.
+List customers who ordered out-of-stock products.
+What was the earliest product added to the database?
+Show all customers who ordered between Jan and Mar 2025.
+Find the number of orders placed each month.
+List customers who have not ordered in the past 60 days.
