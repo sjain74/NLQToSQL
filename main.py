@@ -4,8 +4,9 @@ import utils
 import executeQuery
 
 class AgentTypes(Enum):
-    NLQ_TO_SQL_OPENAI = 1
-    NLQ_TO_SQL_GOOGLE = 2
+    NLQ_TO_SQL_OPENAI       = 1
+    NLQ_TO_SQL_GOOGLE       = 2
+    NLQ_TO_SQL_ANTHROPIC    = 3
 
 VIEW_LOGS = False
 
@@ -30,6 +31,10 @@ if __name__ == "__main__":
                 
             case AgentTypes.NLQ_TO_SQL_GOOGLE:
                 sql_query = nlqToSqlAgent.nlq_to_sql_using_google(query)
+                print(f"Agent Response:\n{sql_query}")
+
+            case AgentTypes.NLQ_TO_SQL_ANTHROPIC:
+                sql_query = nlqToSqlAgent.nlq_to_sql_using_anthropic(query)
                 print(f"Agent Response:\n{sql_query}")
                 
             case _:

@@ -31,3 +31,33 @@ def load_schema():
 
     print(f"Schema:\n{globals.DB_SCHEMA}")
     conn.close()
+
+def get_info_using_external_tools(query: str) -> str:
+    # Decide whether to use a tool based on keywords
+    USE_SEARCH = any(keyword in query.lower() for keyword in ["latest", "trends", "examples", "benchmarks"])
+
+    tool_info = None
+    if USE_SEARCH:
+        search_result = utils.web_search(task)
+        tool_info = f"Here is some information from a quick web search:\n{search_result}\n\n"
+
+    return tool_info
+
+def create_prompt(query: str) -> str:
+    tool_info = get_info_using_external_tools(query)
+
+    if tool_info:
+        return f"""
+            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
+            Tool info: {tool_info}
+            Schema: {globals.DB_SCHEMA}
+            Question: {query}
+            SQL:
+            """
+    else:
+        return f"""
+            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
+            Schema: {globals.DB_SCHEMA}
+            Question: {query}
+            SQL:
+            """

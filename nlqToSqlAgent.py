@@ -10,47 +10,10 @@ import utils
 import globals
 
 LIST_MODELS     = False
-
-"""
-SCHEMA   = "Table: customers (id, name, email, city, created_at)\n" + \
-           "Table: products (id, name, price, in_stock, created_at)\n" + \
-           "Table: orders (id, customer_id, product_id, quantity, order_date, " + \
-                "FOREIGN KEY (customer_id) REFERENCES customers(id), FOREIGN KEY (product_id) REFERENCES products(id))"
-"""
-
 USE_SEARCH      = None
-OPENAI_MODEL    = "gpt-4.1-mini"
-GOOGLE_MODEL    = 'gemini-2.0-flash'
-
-def get_info_using_external_tools(query: str) -> str:
-    # Decide whether to use a tool based on keywords
-    USE_SEARCH = any(keyword in query.lower() for keyword in ["latest", "trends", "examples", "benchmarks"])
-
-    tool_info = None
-    if USE_SEARCH:
-        search_result = utils.web_search(task)
-        tool_info = f"Here is some information from a quick web search:\n{search_result}\n\n"
-
-    return tool_info
-
-def create_prompt(query: str) -> str:
-    tool_info = get_info_using_external_tools(query)
-
-    if tool_info:
-        return f"""
-            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
-            Tool info: {tool_info}
-            Schema: {globals.DB_SCHEMA}
-            Question: {query}
-            SQL:
-            """
-    else:
-        return f"""
-            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query.
-            Schema: {globals.DB_SCHEMA}
-            Question: {query}
-            SQL:
-            """
+OPENAI_MODEL    = "gpt-4.1"
+GOOGLE_MODEL    = "gemini-2.0-flash"
+ANTHROPIC_MODEL = "claude-3-opus-20240229"
 
 def nlq_to_sql_using_openAI(query: str) -> str:
     """
@@ -71,7 +34,7 @@ def nlq_to_sql_using_openAI(query: str) -> str:
         for model in models:
             print(model)
 
-    prompt = create_prompt(query)
+    prompt = utils.create_prompt(query)
 
     print(f"Using model: {OPENAI_MODEL}")
     response = openai.chat.completions.create(
@@ -85,6 +48,8 @@ def nlq_to_sql_using_openAI(query: str) -> str:
     )
 
     reply = response.choices[0].message.content
+    print(f"\n--- Model's Reply ---")
+    print(reply)
     utils.log_agent_action(query, reply, tool_used="Web Search" if USE_SEARCH else None)
     return reply
 
@@ -106,7 +71,7 @@ def nlq_to_sql_using_google(query: str) -> str:
         for i, m in zip(range(5), genai.list_models()):
             print(f"Name: {m.name} Description: {m.description} support: {m.supported_generation_methods}")
 
-    prompt = create_prompt(query)
+    prompt = utils.create_prompt(query)
 
     print(f"Using model: {GOOGLE_MODEL}")
     model = genai.GenerativeModel(GOOGLE_MODEL)
@@ -148,3 +113,35 @@ def nlq_to_sql_using_google(query: str) -> str:
         print(f"\n--- An Error Occurred ---")
         print(f"Error: {e}")
         return None
+
+    import anthropic
+
+def nlq_to_sql_using_anthropic(query: str) -> str:
+    """
+    AI agent that converts a text string query to SQL query using Anthropic.
+    """
+
+    # Configure the API key
+    try:
+        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    except KeyError:
+        print("Error: ANTHROPIC_API_KEY environment variable not set.")
+        print("Please set it before running the script.")
+        exit()
+
+    prompt = utils.create_prompt(query)
+
+    response = client.messages.create(
+        model=ANTHROPIC_MODEL,
+        max_tokens=1024,
+        messages=[
+            {"role": "system", "content": "You are a helpful SQL assistant."},
+            {"role": "user", "content": prompt}
+        ],
+    )
+
+    reply = response.content[0].text
+    print(f"\n--- Model's Reply ---")
+    print(reply)
+    utils.log_agent_action(query, reply, tool_used="Web Search" if USE_SEARCH else None)
+    return reply
