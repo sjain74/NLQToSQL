@@ -38,3 +38,4 @@ options:
 8. Dockerize the whole "product"
 9. Integrate with Birder.media
 10. Dig deeper into other similar works, e.g.: https://levelup.gitconnected.com/how-to-build-a-natural-language-data-querying-agent-with-a-production-ready-co-pilot-24009b86e696
+11. Look into the relevance of MCP based architectures in this problem context.
