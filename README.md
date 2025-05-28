@@ -8,15 +8,13 @@ Natural language query to SQL LLM/agent project
 	1. run "python createSqliteDB.py" to create a sample Sqlite3 DB called shop.db
 	2. run "python createSampleData.py" to populate this DB with 1000 customers, 500 products, and 10000 orders
 3. You can install "DB browser for Sqlite" to access shop.db
-4. python main.py --help                                              
-usage: main.py [-h] [--file FILE]
+4. python main.py --help
+	usage: main.py [-h] [--file FILE]
+	Natural language query to SQL tool.
 
-Natural language query to SQL tool.
-
-options:
-  -h, --help   show this help message and exit
-  --file FILE  Input file containing a list of queries 
-
+	options:
+		-h, --help   show this help message and exit
+		--file FILE  Input file containing a list of queries 
 
 ## TBDs:
 
