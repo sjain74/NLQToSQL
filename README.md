@@ -10,13 +10,15 @@ Natural language query to SQL LLM/agent project
 3. You can install "DB browser for Sqlite" to access shop.db
 4. Command line:
 ```
-$ python main.py --help
-usage: main.py [-h] [--file FILE]
+$ python main.py -h
+usage: main.py [-h] [-ifile IFILE] [-ofile OFILE]
+
 Natural language query to SQL tool.
 
 options:
-	-h, --help   show this help message and exit
-	--file FILE  Input file containing a list of queries
+  -h, --help    show this help message and exit
+  -ifile IFILE  Input file containing a list of natural language queries
+  -ofile OFILE  Output file containing the list of the corresponding SQL queries
 ``` 
 
 ## TBDs:

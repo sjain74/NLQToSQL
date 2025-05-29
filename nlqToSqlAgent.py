@@ -84,7 +84,7 @@ def nlq_to_sql_using_google(query: str) -> str:
         if response.text:
             print(f"\n--- Model's Text Reply ---")
             print(response.text)
-            return response.text.removeprefix("```sql\n").removesuffix("\n```")
+            return response.text.split('\n', 1)[1].removesuffix("\n```")
         else:
             # This handles cases where the 'text' attribute might be empty
             # but other parts (e.g., content filters) might have information.

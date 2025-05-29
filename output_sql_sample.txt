@@ -1,0 +1,298 @@
+Schema: CREATE TABLE customers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    city TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+CREATE TABLE sqlite_sequence(name,seq)
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    price REAL NOT NULL,
+    in_stock BOOLEAN DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+)
+
+
+NLQ: how many customers do we have
+SQL: SELECT
+  COUNT(id)
+FROM Customers;
+
+NLQ: how many products do we have
+SQL: SELECT COUNT(id) FROM products
+
+NLQ: how many orders do we have so far
+SQL: SELECT
+  COUNT(id)
+FROM orders;
+
+NLQ: which customers have not ordered anything
+SQL: SELECT name FROM customers WHERE id NOT IN (SELECT customer_id FROM orders)
+
+NLQ: which customers have ordered more than 15 times
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id HAVING COUNT(T2.id) > 15
+
+NLQ: which customers have never ordered
+SQL: SELECT id, name
+FROM customers
+WHERE id NOT IN (SELECT customer_id FROM orders);
+
+NLQ: list customers with all their orders with product info
+SQL: SELECT
+  c.name AS customer_name,
+  o.id AS order_id,
+  p.name AS product_name,
+  o.quantity,
+  o.order_date
+FROM customers AS c
+JOIN orders AS o
+  ON c.id = o.customer_id
+JOIN products AS p
+  ON o.product_id = p.id;
+
+NLQ: list customers with all their orders with product info, give output sorted on customer name
+SQL: SELECT
+  c.name AS customer_name,
+  c.email AS customer_email,
+  o.id AS order_id,
+  p.name AS product_name,
+  p.price AS product_price,
+  o.quantity AS order_quantity,
+  o.order_date AS order_date
+FROM customers AS c
+JOIN orders AS o
+  ON c.id = o.customer_id
+JOIN products AS p
+  ON o.product_id = p.id
+ORDER BY
+  c.name;
+
+NLQ: which customers have ordered more than 15 products
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id HAVING SUM(T2.quantity) > 15
+
+NLQ: which customers have ordered more than 15 product items
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id HAVING SUM(T2.quantity) > 15
+
+NLQ: which customers have ordered less than 5 times
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id HAVING COUNT(T2.id) < 5
+
+NLQ: which customers have ordered more than 5 times during last month
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id WHERE T2.order_date >= date('now', '-1 month') GROUP BY T1.id HAVING COUNT(T2.id) > 5
+
+NLQ: which products have no orders
+SQL: SELECT name FROM products WHERE id NOT IN (SELECT product_id FROM orders)
+
+NLQ: which products have not been ordered
+SQL: SELECT name FROM products WHERE id NOT IN ( SELECT product_id FROM orders )
+
+NLQ: Show me all customers from New York.
+SQL: SELECT id, name, email FROM customers WHERE city = 'New York'
+
+NLQ: List all products that are currently in stock.
+SQL: SELECT name FROM products WHERE in_stock = 1
+
+NLQ: What is the email address of the customer named John Doe?
+SQL: SELECT email FROM customers WHERE name = 'John Doe'
+
+NLQ: Which customers placed orders in the last 30 days?
+SQL: SELECT DISTINCT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id WHERE T2.order_date >= Date('now', '-30 days')
+
+NLQ: Give me a list of products ordered more than 5 times.
+SQL: SELECT name FROM products WHERE id IN ( SELECT product_id FROM orders GROUP BY product_id HAVING SUM(quantity) > 5 )
+
+NLQ: How many orders did each customer place?
+SQL: SELECT
+  c.name,
+  COUNT(o.id) AS total_orders
+FROM customers AS c
+JOIN orders AS o
+  ON c.id = o.customer_id
+GROUP BY
+  c.name;
+
+NLQ: Show the total revenue generated from each product.
+SQL: SELECT T1.name, SUM(T1.price * T2.quantity) FROM products AS T1 INNER JOIN orders AS T2 ON T1.id = T2.product_id GROUP BY T2.product_id
+
+NLQ: List all customers who have never placed an order.
+SQL: SELECT id, name, email, city, created_at FROM Customers EXCEPT SELECT T1.id, T1.name, T1.email, T1.city, T1.created_at FROM Customers AS T1 INNER JOIN Orders AS T2 ON T1.id = T2.customer_id
+
+NLQ: What is the most expensive product?
+SQL: SELECT name FROM products ORDER BY price DESC LIMIT 1
+
+NLQ: Which product has the highest number of orders?
+SQL: SELECT name FROM products WHERE id = ( SELECT product_id FROM orders GROUP BY product_id ORDER BY COUNT(product_id) DESC LIMIT 1 )
+
+NLQ: Find the top 5 cities with the most customers.
+SQL: SELECT city FROM customers GROUP BY city ORDER BY COUNT(id) DESC LIMIT 5
+
+NLQ: List customers who signed up in the last 7 days.
+SQL: SELECT id, name, email, city, created_at FROM customers WHERE created_at >= Date('now', '-7 days')
+
+NLQ: What is the average price of all products?
+SQL: SELECT AVG(price) FROM products
+
+NLQ: Show the details of all orders placed today.
+SQL: SELECT * FROM orders WHERE DATE(order_date) = DATE('now')
+
+NLQ: List all products ordered by customer with ID 3.
+SQL: SELECT T2.name FROM orders AS T1 INNER JOIN products AS T2 ON T1.product_id = T2.id WHERE T1.customer_id = 3
+
+NLQ: What was the total quantity ordered for each product?
+SQL: SELECT
+  p.name,
+  SUM(o.quantity) AS total_quantity
+FROM Orders AS o
+JOIN Products AS p
+  ON o.product_id = p.id
+GROUP BY
+  p.name;
+
+NLQ: Get a list of all customers and the total amount they spent.
+SQL: SELECT T1.name, SUM(T2.quantity * T3.price) FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id GROUP BY T1.id
+
+NLQ: Which customers ordered a product priced above $100?
+SQL: SELECT DISTINCT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id WHERE T3.price > 100
+
+NLQ: Show all orders with quantity greater than 10.
+SQL: SELECT * FROM orders WHERE quantity > 10
+
+NLQ: List products that have never been ordered.
+SQL: SELECT id, name FROM products EXCEPT SELECT product_id, name FROM orders JOIN products ON products.id = orders.product_id
+
+NLQ: What are the names of customers who ordered the product “Laptop”?
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id WHERE T3.name = 'Laptop'
+
+NLQ: Which product is out of stock?
+SQL: SELECT name FROM products WHERE in_stock = 0
+
+NLQ: Find all orders for customers in Los Angeles.
+SQL: SELECT * FROM orders AS T1 INNER JOIN customers AS T2 ON T1.customer_id = T2.id WHERE T2.city = 'Los Angeles'
+
+NLQ: How many products were ordered by customer “Alice”?
+SQL: SELECT SUM(T2.quantity) FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id WHERE T1.name = 'Alice'
+
+NLQ: Show the order history for customer ID 7.
+SQL: SELECT
+  *
+FROM orders
+WHERE
+  customer_id = 7;
+
+NLQ: List all customers and how many different products they ordered.
+SQL: SELECT
+  c.name,
+  COUNT(DISTINCT o.product_id) AS num_products_ordered
+FROM Customers AS c
+JOIN Orders AS o
+  ON c.id = o.customer_id
+GROUP BY
+  c.name;
+
+NLQ: What is the average order quantity?
+SQL: SELECT AVG(quantity) FROM orders
+
+NLQ: Show customers who ordered more than 3 different products.
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id HAVING COUNT(DISTINCT T2.product_id) > 3
+
+NLQ: What products were ordered in March 2025?
+SQL: SELECT T1.name FROM products AS T1 INNER JOIN orders AS T2 ON T1.id = T2.product_id WHERE STRFTIME('%Y-%m', T2.order_date) = '2025-03'
+
+NLQ: How many orders were placed per day?
+SQL: SELECT COUNT(id), DATE(order_date) FROM orders GROUP BY DATE(order_date)
+
+NLQ: List the top 3 best-selling products by quantity.
+SQL: SELECT T2.name FROM orders AS T1 INNER JOIN products AS T2 ON T1.product_id = T2.id GROUP BY T1.product_id ORDER BY SUM(T1.quantity) DESC LIMIT 3
+
+NLQ: Show customers who ordered at least once and live in Chicago.
+SQL: SELECT DISTINCT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id WHERE T1.city = 'Chicago'
+
+NLQ: Find the customer who spent the most money.
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id GROUP BY T1.id ORDER BY SUM(T2.quantity * T3.price) DESC LIMIT 1
+
+NLQ: List all orders along with customer and product names.
+SQL: SELECT
+  o.id AS order_id,
+  c.name AS customer_name,
+  p.name AS product_name,
+  o.quantity,
+  o.order_date
+FROM orders AS o
+JOIN customers AS c
+  ON o.customer_id = c.id
+JOIN products AS p
+  ON o.product_id = p.id;
+
+NLQ: What is the total revenue from all orders?
+SQL: SELECT SUM(T1.quantity * T2.price) FROM orders AS T1 INNER JOIN products AS T2 ON T1.product_id = T2.id
+
+NLQ: List all products with price less than $20.
+SQL: SELECT
+  id,
+  name
+FROM Products
+WHERE
+  price < 20;
+
+NLQ: How many customers live in each city?
+SQL: SELECT city, COUNT(id) AS num_customers FROM customers GROUP BY city
+
+NLQ: Which customer placed the first order?
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id ORDER BY T2.order_date LIMIT 1
+
+NLQ: What is the most recent order for each customer?
+SQL: SELECT T1.customer_id, T1.product_id, T1.quantity, T1.order_date FROM orders AS T1 INNER JOIN (SELECT customer_id, MAX(order_date) AS max_order_date FROM orders GROUP BY customer_id) AS T2 ON T1.customer_id = T2.customer_id AND T1.order_date = T2.max_order_date
+
+NLQ: Find the total number of customers who ordered “Smartphone”.
+SQL: SELECT COUNT(DISTINCT T1.customer_id) FROM orders AS T1 INNER JOIN products AS T2 ON T1.product_id = T2.id WHERE T2.name = 'Smartphone'
+
+NLQ: List all products and how many times each has been ordered.
+SQL: SELECT
+  p.name,
+  COUNT(o.product_id) AS times_ordered
+FROM products AS p
+LEFT JOIN orders AS o
+  ON p.id = o.product_id
+GROUP BY
+  p.name;
+
+NLQ: Show the most popular product in each city.
+SQL: SELECT T1.city, T3.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id GROUP BY T1.city ORDER BY COUNT(T2.product_id) DESC
+
+NLQ: Get a list of all orders sorted by order date.
+SQL: SELECT
+  *
+FROM orders
+ORDER BY
+  order_date;
+
+NLQ: Find customers who ordered more than once in a single day.
+SQL: SELECT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id GROUP BY T1.id, DATE(T2.order_date) HAVING COUNT(*) > 1
+
+NLQ: Show orders where total value (price × quantity) exceeds $500.
+SQL: SELECT T1.id FROM orders AS T1 INNER JOIN products AS T2 ON T1.product_id = T2.id WHERE T1.quantity * T2.price > 500
+
+NLQ: List customers who ordered out-of-stock products.
+SQL: SELECT DISTINCT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id INNER JOIN products AS T3 ON T2.product_id = T3.id WHERE T3.in_stock = 0
+
+NLQ: What was the earliest product added to the database?
+SQL: SELECT MIN(created_at) FROM products
+
+NLQ: Show all customers who ordered between Jan and Mar 2025.
+SQL: SELECT DISTINCT T1.name FROM customers AS T1 INNER JOIN orders AS T2 ON T1.id = T2.customer_id WHERE T2.order_date BETWEEN '2025-01-01' AND '2025-03-31'
+
+NLQ: Find the number of orders placed each month.
+SQL: SELECT STRFTIME('%Y-%m', order_date), COUNT(id) FROM orders GROUP BY STRFTIME('%Y-%m', order_date)
+
+NLQ: List customers who have not ordered in the past 60 days.
+SQL: SELECT id, name FROM customers WHERE id NOT IN ( SELECT customer_id FROM orders WHERE order_date >= DATE('now', '-60 days') )

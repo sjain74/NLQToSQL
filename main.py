@@ -19,18 +19,19 @@ if __name__ == "__main__":
     agent = AgentTypes.NLQ_TO_SQL_GOOGLE
 
     parser = argparse.ArgumentParser(description="Natural language query to SQL tool.")
-    parser.add_argument("--file", help="Input file containing a list of queries", default=None)
+    parser.add_argument("-ifile", help="Input file containing a list of natural language queries", default="input_nlq.txt")
+    parser.add_argument("-ofile", help="Output file containing the list of the corresponding SQL queries", default="output_sql.txt")
     args = parser.parse_args()
 
-    input_file = open(args.file, "r") if args.file else None
-    out_file = open("output.txt", "w")
+    input_file = open(args.ifile, "r") if args.ifile else None
+    output_file = open(args.ofile, "w")
 
     utils.load_schema()
-    print(f"Schema: {globals.DB_SCHEMA}", file=out_file, flush=True)
+    print(f"Schema: {globals.DB_SCHEMA}", file=output_file, flush=True)
     
     while True:
         if input_file:
-            time.sleep(10)  # to handle APIs rate limits.
+            time.sleep(5)  # to handle APIs rate limits.
             line = input_file.readline()
             if line:
                 query = line.strip()    # skip \n at the end of the line.
@@ -47,7 +48,7 @@ if __name__ == "__main__":
                 print("Goodbye!")
                 break
 
-        print(f"\nNLQ: {query}", file=out_file, flush=True)
+        print(f"\nNLQ: {query}", file=output_file, flush=True)
 
         sql = None
         match agent:
@@ -69,7 +70,7 @@ if __name__ == "__main__":
                 print(log)
 
         if sql:
-            print(f"SQL: {sql}", file=out_file, flush=True)
+            print(f"SQL: {sql}", file=output_file, flush=True)
             results = executeQuery.execute_query(sql)
 
             for row in results:
@@ -77,4 +78,4 @@ if __name__ == "__main__":
 
     if input_file:
         input_file.close()
-    out_file.close()
+    output_file.close()
