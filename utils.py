@@ -48,16 +48,17 @@ def create_prompt(query: str) -> str:
 
     if tool_info:
         return f"""
-            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query for a sqlite3 DB.
+            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query for a sqlite3 DB. If disambiguation required, ask clarifying questions.
+            Schema: {globals.DB_SCHEMA}
             Tool info: {tool_info}
             Schema: {globals.DB_SCHEMA}
             Question: {query}
-            SQL:
+            SQL/clarifying question:
             """
     else:
         return f"""
-            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query for a sqlite3 DB.
+            You are a SQL assistant. Given the schema and a natural language question, write a safe SQL query for a sqlite3 DB. If disambiguation required, ask clarifying questions.
             Schema: {globals.DB_SCHEMA}
             Question: {query}
-            SQL:
+            SQL/clarifying question:
             """

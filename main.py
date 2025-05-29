@@ -19,7 +19,7 @@ if __name__ == "__main__":
     agent = AgentTypes.NLQ_TO_SQL_GOOGLE
 
     parser = argparse.ArgumentParser(description="Natural language query to SQL tool.")
-    parser.add_argument("-ifile", help="Input file containing a list of natural language queries", default="input_nlq.txt")
+    parser.add_argument("-ifile", help="Input file containing a list of natural language queries")
     parser.add_argument("-ofile", help="Output file containing the list of the corresponding SQL queries", default="output_sql.txt")
     args = parser.parse_args()
 
