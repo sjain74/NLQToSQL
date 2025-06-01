@@ -1,5 +1,5 @@
 # NLQToSQL
-Natural language query to SQL LLM/agent project
+Natural language query to SQL LLM/agent, which can be run in an interactive mode (i.e. specify natural language queries interactively) or an input file containing a list of natural language queries can be specified thru the command line.
 
 ## Steps to play around with this agent on mac:
 
@@ -38,9 +38,9 @@ options:
 4. Perform above steps with models from OpenAI and Anthropic - Looks like OpenAI and Anthropic don't offer APIs access in free tier, will postpone this TBD till we have a customer interest.
 	1. Test these models with the test suite
 	2. Compare which models are performing better
-7. Think about some other schemes to improve accuracy e.g. by comparing outputs from different models etc.
-8. Add a frontend
-9. Dockerize the whole "product"
-10. Integrate with Birder.media
-11. Dig deeper into other similar works, e.g.: https://levelup.gitconnected.com/how-to-build-a-natural-language-data-querying-agent-with-a-production-ready-co-pilot-24009b86e696
-12. Look into the relevance of MCP based architectures in this problem context.
+	3. Think about some other schemes to improve accuracy e.g. by comparing outputs from different models etc.
+5. Add a frontend
+6. Dockerize the whole "product"
+7. Integrate with Birder.media
+8. Dig deeper into other similar works, e.g.: https://levelup.gitconnected.com/how-to-build-a-natural-language-data-querying-agent-with-a-production-ready-co-pilot-24009b86e696
+9. Look into the relevance of MCP based architectures in this problem context.
