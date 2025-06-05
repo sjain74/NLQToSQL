@@ -1,5 +1,5 @@
 # NLQToSQL
-Natural language query to SQL LLM/agent, which can be run in an interactive mode (i.e. specify natural language queries interactively) or an input file containing a list of natural language queries can be specified thru the command line.
+Natural language query to SQL AI agent, which can be run in an interactive mode (i.e. specify natural language queries interactively) or an input file containing a list of natural language queries can be specified thru the command line. After generating the SQL queries, the agent executes the SQL queries against a sample Sqlite3 DB.
 
 ## Steps to play around with this agent on mac:
 
